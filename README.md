@@ -1,7 +1,6 @@
 deelesh.github.io
 ======
-
-The source code of [http://twitter.github.com/](https://github.com/twitter/twitter.github.com)]
+The landing page is based on the [twitter.github.com](https://github.com/twitter/twitter.github.com)
 
 LICENSE
 ------------
