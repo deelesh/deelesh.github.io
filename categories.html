@@ -11,12 +11,14 @@
         <meta property="og:type" content="article" />
         <meta name="twitter:card" content="summary">
 
-<meta property="og:title" content="My Weblog"/>
-<meta name="twitter:title" content="My Weblog">
-<meta property="og:url" content="." />
+<meta property="og:title" content="All Categories · My Weblog"/>
+<meta name="twitter:title" content="All Categories · My Weblog">
+<meta property="og:url" content="./categories.html" />
+<meta property="og:description" content="All categories of the My Weblog blog" />
+<meta name="twitter:description" content="All categories of the My Weblog blog">
 <meta property="og:site_name" content="My Weblog" />
 <meta property="og:article:author" content="Deelesh Mandloi" />
-        <title>My Weblog
+        <title>All Categories · My Weblog
 </title>
         <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
@@ -25,6 +27,8 @@
         <link rel="stylesheet" type="text/css" href="./theme/css/elegant.css" media="screen">
         <link rel="stylesheet" type="text/css" href="./theme/css/custom.css" media="screen">
         <link href="http://deelesh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="My Weblog - Full Atom Feed" />
+
+        <link href="http://deelesh.github.io/feeds/big-data.atom.xml" type="application/atom+xml" rel="alternate" title="My Weblog - Big Data Category Atom Feed" />
     </head>
     <body>
         <div id="content-sans-footer">
@@ -39,9 +43,9 @@
                     <a class="brand" href="./"><span class=site-name>My Weblog</span></a>
                     <div class="nav-collapse collapse">
                         <ul class="nav pull-right top-menu">
-                            <li  class="active"><a href=".">Home</a></li>
+                            <li ><a href=".">Home</a></li>
                             <li ><a href="./pages/projects.html">Projects</a></li>
-                            <li ><a href="./categories.html">Categories</a></li>
+                            <li  class="active"><a href="./categories.html">Categories</a></li>
                             <li ><a href="./tags.html">Tags</a></li>
                             <li ><a href="./archives.html">Archives</a></li>
                             <li><form class="navbar-search" action="./search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
@@ -56,38 +60,29 @@
                 <div class="span10">
 <div class="row-fluid">
     <header class="page-header span10 offset2">
-    <h1><a href=".">My Weblog</a></h1>
+    <h1><a href="./categories.html">All Categories</a></h1>
     </header>
+</div>
 
-    <div class="row-fluid">
-        <div class="span8 offset2">
-            <header>
-            <h1 id="about-me">About me</h1>
-            </header>
-            <div class="article-content">
-                I am Deelesh Mandloi. I work as a Product Engineer in the software development group at <a href="http://www.esri.com">Esri</a> building geocoding and routing    services available with <a href="http://www.arcgis.com">ArcGIS Online</a>. I love Geography, maps, and writing code in Python. This is my personal blog. The views and opinions expressed on this blog are my own and do not necessarily represent those of my employer.
-            </div>
-        </div>
 
-    </div>
-
-    <div class="row-fluid">
-        <div class="span8 offset2">
-            <header>
-            <h1 id="recent-posts">Recent Posts <a id="allposts" href="./archives.html">all posts</a></h1>
-            </header>
-        <div class="recent-posts">
-            <article>
-                <a href="./pyspark-windows.html">Getting Started with PySpark on&nbsp;Windows  </a>
-                <section>
-                    posted in
-                <a href="./categories.html#big-data-ref">Big Data</a>
-                <div class="recent-posts-time">
-                <time pubdate="pubdate" datetime="2016-07-09T00:00:00-07:00">Sat 09 July 2016</time>
+<div class="row-fluid">
+    <div class="span8 offset2">
+        <div class="accordion" id="accordion2">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle list-of-categories" data-toggle="collapse" data-parent="#accordion2" href="#big-data-ref">
+                        Big Data<span>1</span>
+                    </a>
                 </div>
-                </section>
-            </article>
-        </div>
+                <div id="big-data-ref" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <ul class="list-articles-category">
+ 
+                            <li><time pubdate="pubdate" datetime="2016-07-09T00:00:00-07:00">Sat 09 July 2016</time><a href="./pyspark-windows.html">Getting Started with PySpark on&nbsp;Windows  </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -111,6 +106,18 @@
                 return (query.length > 0);
             }
         </script>
+
+<script  language="javascript" type="text/javascript">
+    function uncollapse() {
+            $(window.location.hash).collapse({
+                toggle: true
+            })
+    }
+</script>
+
+<script type="text/javascript" language="JavaScript">
+    uncollapse(); 
+</script>
     </body>
     <!-- Theme: Elegant built for Pelican
     License : http://oncrashreboot.com/pelican-elegant -->

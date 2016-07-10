@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Deelesh Mandloi" />
+        <meta name="copyright" content="Deelesh Mandloi" />
+
+        <meta name="twitter:creator" content="@deelesh">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="pyspark, spark, ptvs, visual studio, python, Big Data, " />
+
+<meta property="og:title" content="Developing PySpark Applications on Windows using Visual Studio "/>
+<meta property="og:url" content="../drafts/pyspark-visual-studio.html" />
+<meta property="og:description" content="Use Visual Studio 2015 as your IDE for developing Apache Spark applications in Python on Windows." />
+<meta property="og:site_name" content="My Weblog" />
+<meta property="og:article:author" content="Deelesh Mandloi" />
+<meta property="og:article:published_time" content="2016-07-06T00:00:00-07:00" />
+<meta property="" content="2016-07-16T00:00:00-07:00" />
+<meta name="twitter:title" content="Developing PySpark Applications on Windows using Visual Studio ">
+<meta name="twitter:description" content="Use Visual Studio 2015 as your IDE for developing Apache Spark applications in Python on Windows.">
+
+        <title>Developing PySpark Applications on Windows using Visual Studio  · My Weblog
+</title>
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="../theme/css/pygments.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="../theme/tipuesearch/tipuesearch.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="../theme/css/elegant.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="../theme/css/custom.css" media="screen">
+        <link href="http://deelesh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="My Weblog - Full Atom Feed" />
+    </head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="../"><span class=site-name>My Weblog</span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li ><a href="..">Home</a></li>
+                            <li ><a href="../pages/projects.html">Projects</a></li>
+                            <li ><a href="../categories.html">Categories</a></li>
+                            <li ><a href="../tags.html">Tags</a></li>
+                            <li ><a href="../archives.html">Archives</a></li>
+                            <li><form class="navbar-search" action="../search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
+<article>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+    <h1><a href="../drafts/pyspark-visual-studio.html"> Developing PySpark Applications on Windows using Visual&nbsp;Studio  </a></h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#installing-apache-spark">Installing Apache Spark</a></li>
+<li><a href="#configuring-the-spark-installation">Configuring the Spark Installation</a></li>
+<li><a href="#setting-up-the-pyspark-python-environment-within-visual-studio">Setting up the PySpark Python Environment within Visual Studio</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+
+            
+            <p>Here I describe the workflow to get started with developing <a href="http://spark.apache.org/">Apache Spark</a> applications in Python on Windows using Visual Studio 2015 as your Integrated Development Environment (<span class="caps">IDE</span>). We will install Spark, configure the installation and setup a Python environment specific to Spark in Visual Studio that will allow us to launch an interactive window with Spark support as well as allow us to run and debug spark scripts in Visual Studio. </p>
+
+<h2 id="installing-apache-spark">Installing Apache Spark</h2>
+<p>From the Spark <a href="http://spark.apache.org/downloads.html">download page</a>, choose the latest Spark release. For the package type, select a version that is pre-built for the latest version of Hadoop such as <em>Pre-built for Hadoop 2.6</em>. For choose a download type, select <em>Direct Download</em>. Click the download link in item 4 to download a zipped tarball file ending in .tgz extension.</p>
+<p>In order to install Apache Spark, there is no need to run any installer. You can extract the files in any folder of your choice but make sure that your folder path or the folder name does not include any spaces. In my case, I created a folder called <code>spark</code> in my C drive and unzipped the contents in a folder called <code>spark-1.6.2-bin-hadoop2.6</code> using the [7Zip]((http://www.7-zip.org/) tool. So all files related to Spark are in a folder called <code>C:\spark\spark-1.6.2-bin-hadoop2.6</code>. I will refer to this folder as <code>SPARK_HOME</code> from now on.</p>
+<p>To test if your installation was successful, try running the <code>bin\pyspark</code> script in the SPARK_HOME directory from a Windows Command Prompt. This script starts the PySpark shell which can be used to interactively work with Spark.</p>
+<h2 id="configuring-the-spark-installation">Configuring the Spark Installation</h2>
+<p>By default, the Spark installation on Windows does not include the <code>winutils.exe</code> utility that is used by Spark. If you do not tell your Spark installation where to look for <code>winutils.exe</code>, you will see error messages when running the PySpark shell (which does not affect running the PySpark shell) and will not be able to run any standalone Python scripts using the <code>bin\spark-submit</code> script.</p>
+<p><img alt="PySpark Shell without winutils.exe" src="images/spark-shell-missing-winutils.PNG"/></p>
+<p>Let’s download the winutils.exe and configure our Spark installation to find the winutils.exe.</p>
+<ol>
+<li>
+<p>Create a <code>hadoop\bin</code> folder inside the SPARK_HOME folder.</p>
+</li>
+<li>
+<p>Download the <a href="https://github.com/steveloughran/winutils">winutils.exe</a> for the version of hadoop against which your Spark installation was built for. In my case the hadoop version was 2.6.0 and so I [downloaded] (https://github.com/steveloughran/winutils/raw/master/hadoop-2.6.0/bin/winutils.exe) the winutils.exe for hadoop 2.6.0 and copied it to the <code>hadoop\bin</code> folder in the SPARK_HOME folder.</p>
+</li>
+<li>
+<p>Create a system environment variable in Windows called <code>SPARK_HOME</code> that points to the SPARK_HOME folder path.</p>
+</li>
+<li>
+<p>Create a system environment variable in Windows called <code>HADOOP_HOME</code> that points to the hadoop folder inside the SPARK_HOME folder. </p>
+<blockquote>
+<p>Since the <code>hadoop</code> folder is inside the SPARK_HOME folder, it is better to create <code>HADOOP_HOME</code> environment variable using a value of <code>%SPARK_HOME%\hadoop</code></p>
+</blockquote>
+</li>
+</ol>
+<p>If you now run the <code>bin\pyspark</code> script from a Windows Command Prompt, the error messages related to winutils.exe should be gone.</p>
+<p>One more change to your Spark installation can be made to lower the verbosity of the messages written to the console. In order to do this</p>
+<ol>
+<li>Copy the <code>log4j.properties.template</code> file in the <code>SPARK_HOME\conf</code> folder as <code>log4j.properties</code> file.</li>
+<li>Set the <code>log4j.rootCategory</code> property value to <code>WARN, console</code></li>
+<li>Save the <code>log4j.properties</code> file.</li>
+</ol>
+<p>Now only warning and error messages will be logged to the console and informative messages will not be logged.     </p>
+<h2 id="setting-up-the-pyspark-python-environment-within-visual-studio">Setting up the PySpark Python Environment within Visual Studio</h2>
+<p>Visual Studio 2015 includes Python language support. If you did not install this feature when installing Visual Studio, you need to <a href="https://github.com/Microsoft/PTVS/releases/latest">download</a> and <a href="https://github.com/Microsoft/PTVS/wiki/PTVS-Installation">install</a> the Python Tools for Visual Studio (<span class="caps">PTVS</span>) extension. </p>
+<p>We will create a PySpark environment in Visual Studio that we can use with any of our Python projects and  will also add the ability to launch an <a href="https://github.com/Microsoft/PTVS/wiki/Interactive-REPL">interactive window</a> in Visual Studio that has the PySpark Shell. </p>
+<ol>
+<li>Create a system environment variable in Windows called <code>PYTHONPATH</code> with a value <code>%SPARK_HOME%\bin;%SPARK_HOME%\python;%SPARK_HOME%\python\lib\py4j-0.9-src.zip</code>.<blockquote>
+<p>The version of <code>py4j</code> package might be different depending on your version of Spark. Use the proper version.</p>
+</blockquote>
+</li>
+<li>
+<p>Open Visual Studio and go to <code>Tools &gt; Python Tools &gt; Python Environments</code></p>
+</li>
+<li>
+<p>In the <em>Python Environments</em> dialog, click the <em>Custom…</em> link button and specify the following settings for the new environment.</p>
+<p><img alt="Settings for a new Python environment in Visual Studio" src="images/new-visual-studio-env.png"/></p>
+</li>
+<li>
+<p>Click the <em>Apply</em> button to create the new <code>PySpark</code> Python environment.</p>
+</li>
+<li>
+<p>From the <em>Overview</em> group of the <code>PySpark</code> environment, click the <em>Configure interactive window</em> button.</p>
+</li>
+<li>
+<p>In the <em>Options</em> dialog, specify the <code>python\pyspark\shell.py</code> script from the SPARK_HOME folder as the <em>Startup Script</em> for the interactive window.</p>
+<p><img alt="Startup script for the PySpark Environment" src="images/env-startup-script.png"/></p>
+</li>
+<li>
+<p>Click <em><span class="caps">OK</span></em> to close the <em>Options</em> dialog.</p>
+</li>
+</ol>
+<p>You can now launch a new PySpark interactive window from <code>Tools &gt; Python Tools &gt; PySpark Interactive</code>.</p>
+<p>In order to create a standalone PySpark application, you can create a new Visual Studio project of type <em>Python Application</em> and set its environment to <code>PySpark</code>. This will make sure that all PySpark dependencies are available to the project and will allow you to run your PySpark scripts with or without debugging from within Visual Studio.</p>
+<h2 id="references">References</h2>
+<p>I used the following references to gather information about this post.</p>
+<ul>
+<li>
+<p><a href="https://blogs.msdn.microsoft.com/arsen/2016/02/09/resolving-spark-1-6-0-java-lang-nullpointerexception-not-found-value-sqlcontext-error-when-running-spark-shell-on-windows-10-64-bit/">Setting up winutils.exe</a></p>
+</li>
+<li>
+<p><a href="http://mund-consulting.com/Blog/using-ipython-and-visual-studio-with-apache-spark/">Using Visual Studio with Apache Spark</a></p>
+</li>
+<li>
+<p>Downloading Spark and Getting Started (chapter 2) from O’Reilly’s <a href="https://www.amazon.com/dp/1449358624">Learning Spark</a> book.</p>
+</li>
+</ul>
+            
+            
+            <hr/>
+        </div>
+        <section>
+        <div class="span2" style="float:right;font-size:0.9em;">
+            <h4>Published</h4>
+            <time pubdate="pubdate" datetime="2016-07-06T00:00:00-07:00">Jul 6, 2016</time>
+
+<h4>Last Updated</h4>
+<time datetime="2016-07-16T00:00:00-07:00">Jul 16, 2016</time>
+
+            <h4>Category</h4>
+            <a class="category-link" href="../categories.html#big-data-ref">Big Data</a>
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="../tags.html#ptvs-ref">ptvs
+</a></li>
+                <li><a href="../tags.html#pyspark-ref">pyspark
+                    <span>1</span>
+</a></li>
+                <li><a href="../tags.html#python-ref">python
+                    <span>1</span>
+</a></li>
+                <li><a href="../tags.html#spark-ref">spark
+                    <span>1</span>
+</a></li>
+                <li><a href="../tags.html#visual-studio-ref">visual studio
+</a></li>
+            </ul>
+<h4>Contact</h4>
+    <a href="http://github.com/deelesh" title="My github Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-github sidebar-social-links"></i></a>
+    <a href="http://twitter.com/deelesh" title="My twitter Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-twitter sidebar-social-links"></i></a>
+    <a href="mailto:deelesh@gmail.com" title="My Email Address" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-envelope sidebar-social-links"></i></a>
+        </div>
+        </section>
+</div>
+</article>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+        <div id="push"></div>
+    </div>
+<footer>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
+    </ul>
+</div>
+</footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+    
+    </body>
+    <!-- Theme: Elegant built for Pelican
+    License : http://oncrashreboot.com/pelican-elegant -->
+</html>

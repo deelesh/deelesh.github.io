@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <meta charset="utf-8"> 
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Deelesh Mandloi" />
+        <meta name="copyright" content="Deelesh Mandloi" />
+
+        <meta name="twitter:creator" content="@deelesh">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="pyspark, spark, python, Big Data, " />
+
+<meta property="og:title" content="Getting Started with PySpark on Windows "/>
+<meta property="og:url" content="./pyspark-windows.html" />
+<meta property="og:description" content="Use Apache Spark with Python on Windows." />
+<meta property="og:site_name" content="My Weblog" />
+<meta property="og:article:author" content="Deelesh Mandloi" />
+<meta property="og:article:published_time" content="2016-07-09T00:00:00-07:00" />
+<meta property="" content="2016-07-09T22:45:00-07:00" />
+<meta name="twitter:title" content="Getting Started with PySpark on Windows ">
+<meta name="twitter:description" content="Use Apache Spark with Python on Windows.">
+
+        <title>Getting Started with PySpark on Windows  · My Weblog
+</title>
+        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.1/css/font-awesome.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="./theme/css/pygments.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="./theme/tipuesearch/tipuesearch.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="./theme/css/elegant.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="./theme/css/custom.css" media="screen">
+        <link href="http://deelesh.github.io/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="My Weblog - Full Atom Feed" />
+    </head>
+    <body>
+        <div id="content-sans-footer">
+        <div class="navbar navbar-static-top">
+            <div class="navbar-inner">
+                <div class="container-fluid">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="./"><span class=site-name>My Weblog</span></a>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav pull-right top-menu">
+                            <li ><a href=".">Home</a></li>
+                            <li ><a href="./pages/projects.html">Projects</a></li>
+                            <li ><a href="./categories.html">Categories</a></li>
+                            <li ><a href="./tags.html">Tags</a></li>
+                            <li ><a href="./archives.html">Archives</a></li>
+                            <li><form class="navbar-search" action="./search.html" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span1"></div>
+                <div class="span10">
+<article>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+    <h1><a href="./pyspark-windows.html"> Getting Started with PySpark on&nbsp;Windows  </a></h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#installing-prerequisites">Installing Prerequisites</a><ul>
+<li><a href="#java">Java</a></li>
+<li><a href="#python">Python</a></li>
+</ul>
+</li>
+<li><a href="#installing-apache-spark">Installing Apache Spark</a></li>
+<li><a href="#configuring-the-spark-installation">Configuring the Spark Installation</a><ul>
+<li><a href="#installing-winutils">Installing winutils</a></li>
+<li><a href="#configuring-the-log-level-for-spark">Configuring the log level for Spark</a></li>
+</ul>
+</li>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+
+            
+            <p>I decided to teach myself how to work with big data and came across <a href="http://spark.apache.org">Apache Spark</a>. While I had heard of <a href="http://hadoop.apache.org">Apache Hadoop</a>, to use Hadoop for working with big data, I had to write code in Java which I was not really looking forward to as I love to write code in Python. Spark supports a Python programming <span class="caps">API</span> called <a href="http://spark.apache.org/docs/latest/api/python/pyspark.html">PySpark</a> that is actively maintained and was enough to convince me to start learning PySpark for working with big data.</p>
+<p>In this post, I describe how I got started with PySpark on Windows. My laptop is running Windows 10. So the screenshots are specific to Windows 10. I am also assuming that you are comfortable working with the Command Prompt on Windows. You do not have to be an expert, but you need to know how to start a Command Prompt and run commands such as those that help you move around your computer’s file system. In case you need a refresher, a quick <a href="http://www.cs.princeton.edu/courses/archive/spr05/cos126/cmd-prompt.html">introduction</a> might be handy.</p>
+<blockquote>
+<p>Often times, many open source projects do not have good Windows support. So I had to first figure out if Spark and PySpark would work well on Windows. The official Spark <a href="http://spark.apache.org/docs/latest/#downloading">documentation</a> does mention about supporting Windows.   </p>
+</blockquote>
+
+<h2 id="installing-prerequisites">Installing Prerequisites</h2>
+<p>PySpark requires Java version 7 or later and Python version 2.6 or later. Let’s first check if they are already installed or install them and make sure that PySpark can work with these two components.</p>
+<h3 id="java">Java</h3>
+<p>Java is used by many other software. So it is quite possible that a required version (in our case version 7 or later) is already available on your computer. To check if Java is available and find it’s version, open a Command Prompt and type the following command.</p>
+<div class="highlight"><pre><span></span>    java -version
+</pre></div>
+<p>If Java is installed and configured to work from a Command Prompt, running the above command should print the information about the Java version to the console. For example, I got the following output on my laptop.</p>
+<div class="highlight"><pre><span></span>   java version "1.8.0_92"
+   Java(TM) SE Runtime Environment (build 1.8.0_92-b14)
+   Java HotSpot(TM) 64-Bit Server VM (build 25.92-b14, mixed mode)
+</pre></div>
+<p>Instead if you get a message like</p>
+<div class="highlight"><pre><span></span>    'java' is not recognized as an internal or external command, operable program or batch file.
+</pre></div>
+<p>It means you need to install Java. To do so, </p>
+<ol>
+<li>
+<p>Go to the Java <a href="http://www.oracle.com/technetwork/java/javase/downloads/">download</a> page. In case the download link has changed, search for <code>Java SE Runtime Environment</code> on the internet and you should be able to find the download page.</p>
+</li>
+<li>
+<p>Click the <em>Download</em> button beneath <em><span class="caps">JRE</span></em> </p>
+</li>
+<li>
+<p>Accept the license agreement and download the latest version of <code>Java SE Runtime Environment</code> installer. I suggest getting the exe for Windows x64 (such as <code>jre-8u92-windows-x64.exe</code>) unless you are using a 32 bit version of Windows in which case you need to get the <em>Windows x86 Offline</em> version.</p>
+</li>
+<li>
+<p>Run the installer. </p>
+</li>
+</ol>
+<p>After the installation is complete, close the Command Prompt if it was already open, open it and check if you can successfully run <code>java -version</code> command.</p>
+<h3 id="python">Python</h3>
+<p>Python is used by many other software. So it is quite possible that a required version (in our case version 2.6 or later) is already available on your computer. To check if Python is available and find it’s version, open a Command Prompt and type the following command.</p>
+<div class="highlight"><pre><span></span>    python --version
+</pre></div>
+<p>If Python is installed and configured to work from a Command Prompt, running the above command should print the information about the Python version to the console. For example, I got the following output on my laptop.</p>
+<div class="highlight"><pre><span></span>   Python 2.7.10
+</pre></div>
+<p>Instead if you get a message like</p>
+<div class="highlight"><pre><span></span>    'python' is not recognized as an internal or external command, operable program or batch file.
+</pre></div>
+<p>It means you need to install Python. To do so,</p>
+<ol>
+<li>
+<p>Go to the Python <a href="https://www.python.org/downloads/windows/">download</a> page.</p>
+</li>
+<li>
+<p>Click the <em>Latest Python 2 Release</em> link.</p>
+</li>
+<li>
+<p>Download the <code>Windows x86-64 MSI installer</code> file. If you are using a 32 bit version of Windows download the <code>Windows x86 MSI installer</code> file.</p>
+</li>
+<li>
+<p>When you run the installer, on the <strong>Customize Python</strong> section, make sure that the option <em>Add python.exe to Path</em> is selected. If this option is not selected, some of the PySpark utilities such as <code>pyspark</code> and <code>spark-submit</code> might not work.</p>
+<p><img alt="Add python.exe to Path when installing Python on Windows" src="images/python-install.png"/></p>
+</li>
+</ol>
+<p>After the installation is complete, close the Command Prompt if it was already open, open it and check if you can successfully run <code>python --version</code> command.</p>
+<h2 id="installing-apache-spark">Installing Apache Spark</h2>
+<ol>
+<li>
+<p>Go to the Spark <a href="http://spark.apache.org/downloads.html">download</a> page.</p>
+</li>
+<li>
+<p>For <em>Choose a Spark release</em>, select the latest stable release of Spark.</p>
+</li>
+<li>
+<p>For <em>Choose a package type</em>, select a version that is pre-built for the latest version of Hadoop such as <em>Pre-built for Hadoop 2.6</em>.</p>
+</li>
+<li>
+<p>For <em>Choose a download type</em>, select <em>Direct Download</em>.</p>
+</li>
+<li>
+<p>Click the link next to <em>Download Spark</em> to download a zipped tarball file ending in .tgz extension such as <code>spark-1.6.2-bin-hadoop2.6.tgz</code>.</p>
+</li>
+<li>
+<p>In order to install Apache Spark, there is no need to run any installer. You can extract the files from the downloaded tarball in any folder of your choice using the <a href="http://www.7-zip.org/">7Zip</a> tool. </p>
+<blockquote>
+<p>Make sure that the folder path and the folder name containing Spark files do not contain any spaces.</p>
+</blockquote>
+</li>
+</ol>
+<p>In my case, I created a folder called <code>spark</code> on my C drive and extracted the zipped tarball in a folder called <code>spark-1.6.2-bin-hadoop2.6</code>. So all Spark files are in a folder called <code>C:\spark\spark-1.6.2-bin-hadoop2.6</code>. From now on, I will refer to this folder as <code>SPARK_HOME</code> in this post.</p>
+<p>To test if your installation was successful, open a Command Prompt, change to SPARK_HOME directory and type <code>bin\pyspark</code>. This should start the PySpark shell which can be used to interactively work with Spark. I got the following messages in the console after running <code>bin\pyspark</code> command.</p>
+<div class="highlight"><pre><span></span><span class="nt">Python</span> <span class="nt">2</span><span class="nc">.7.10</span> <span class="o">(</span><span class="nt">default</span><span class="o">,</span> <span class="nt">May</span> <span class="nt">23</span> <span class="nt">2015</span><span class="o">,</span> <span class="nt">09</span><span class="nd">:44:00</span><span class="o">)</span> <span class="cp">[</span><span class="nx">MSC</span> <span class="nx">v.1500</span> <span class="mi">64</span> <span class="nx">bit</span> <span class="p">(</span><span class="nx">AMD64</span><span class="p">)</span><span class="cp">]</span> <span class="nt">on</span> <span class="nt">win32</span>
+<span class="nt">Type</span> <span class="s2">"help"</span><span class="o">,</span> <span class="s2">"copyright"</span><span class="o">,</span> <span class="s2">"credits"</span> <span class="nt">or</span> <span class="s2">"license"</span> <span class="nt">for</span> <span class="nt">more</span> <span class="nt">information</span><span class="o">.</span>
+<span class="nt">Using</span> <span class="nt">Spark</span><span class="s1">'s default log4j profile: org/apache/spark/log4j-defaults.properties</span>
+<span class="s1">16/07/09 15:44:10 INFO SparkContext: Running Spark version 1.6.2</span>
+<span class="s1">16/07/09 15:44:10 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span>
+<span class="s1">16/07/09 15:44:10 ERROR Shell: Failed to locate the winutils binary in the hadoop binary path</span>
+<span class="s1">java.io.IOException: Could not locate executable null\bin\winutils.exe in the Hadoop binaries.</span>
+<span class="s1">        at org.apache.hadoop.util.Shell.getQualifiedBinPath(Shell.java:355)</span>
+<span class="s1">        at org.apache.hadoop.util.Shell.getWinUtilsPath(Shell.java:370)</span>
+<span class="s1">        at org.apache.hadoop.util.Shell.&lt;clinit&gt;(Shell.java:363)</span>
+<span class="s1">        at org.apache.hadoop.util.StringUtils.&lt;clinit&gt;(StringUtils.java:79)</span>
+<span class="s1">        at org.apache.hadoop.security.Groups.parseStaticMapping(Groups.java:104)</span>
+<span class="s1">        at org.apache.hadoop.security.Groups.&lt;init&gt;(Groups.java:86)</span>
+<span class="s1">        at org.apache.hadoop.security.Groups.&lt;init&gt;(Groups.java:66)</span>
+<span class="s1">        at org.apache.hadoop.security.Groups.getUserToGroupsMappingService(Groups.java:280)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.initialize(UserGroupInformation.java:271)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.ensureInitialized(UserGroupInformation.java:248)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.loginUserFromSubject(UserGroupInformation.java:763)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.getLoginUser(UserGroupInformation.java:748)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.getCurrentUser(UserGroupInformation.java:621)</span>
+<span class="s1">        at org.apache.spark.util.Utils$$anonfun$getCurrentUserName$1.apply(Utils.scala:2198)</span>
+<span class="s1">        at org.apache.spark.util.Utils$$anonfun$getCurrentUserName$1.apply(Utils.scala:2198)</span>
+<span class="s1">        at scala.Option.getOrElse(Option.scala:120)</span>
+<span class="s1">        at org.apache.spark.util.Utils$.getCurrentUserName(Utils.scala:2198)</span>
+<span class="s1">        at org.apache.spark.SparkContext.&lt;init&gt;(SparkContext.scala:322)</span>
+<span class="s1">        at org.apache.spark.api.java.JavaSparkContext.&lt;init&gt;(JavaSparkContext.scala:59)</span>
+<span class="s1">        at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)</span>
+<span class="s1">        at sun.reflect.NativeConstructorAccessorImpl.newInstance(Unknown Source)</span>
+<span class="s1">        at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(Unknown Source)</span>
+<span class="s1">        at java.lang.reflect.Constructor.newInstance(Unknown Source)</span>
+<span class="s1">        at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:234)</span>
+<span class="s1">        at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:381)</span>
+<span class="s1">        at py4j.Gateway.invoke(Gateway.java:214)</span>
+<span class="s1">        at py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:79)</span>
+<span class="s1">        at py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:68)</span>
+<span class="s1">        at py4j.GatewayConnection.run(GatewayConnection.java:209)</span>
+<span class="s1">        at java.lang.Thread.run(Unknown Source)</span>
+<span class="s1">16/07/09 15:44:10 INFO SecurityManager: Changing view acls to: deel4986</span>
+<span class="s1">16/07/09 15:44:10 INFO SecurityManager: Changing modify acls to: deel4986</span>
+<span class="s1">16/07/09 15:44:10 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(deel4986); users with modify permissions: Set(deel4986)</span>
+<span class="s1">16/07/09 15:44:11 INFO Utils: Successfully started service '</span><span class="nt">sparkDriver</span><span class="err">'</span> <span class="nt">on</span> <span class="nt">port</span> <span class="nt">53607</span><span class="o">.</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">15</span><span class="nd">:44:11</span> <span class="nt">INFO</span> <span class="nt">Slf4jLogger</span><span class="o">:</span> <span class="nt">Slf4jLogger</span> <span class="nt">started</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">15</span><span class="nd">:44:11</span> <span class="nt">INFO</span> <span class="nt">Remoting</span><span class="o">:</span> <span class="nt">Starting</span> <span class="nt">remoting</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">15</span><span class="nd">:44:11</span> <span class="nt">INFO</span> <span class="nt">Remoting</span><span class="o">:</span> <span class="nt">Remoting</span> <span class="nt">started</span><span class="o">;</span> <span class="nt">listening</span> <span class="nt">on</span> <span class="nt">addresses</span> <span class="o">:</span><span class="cp">[</span><span class="nx">akka.tcp</span><span class="p">:</span><span class="c1">//sparkDriverActorSystem@localhost:53620]</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">Utils</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">started</span> <span class="nx">service</span> <span class="s1">'sparkDriverActorSystem'</span> <span class="k">on</span> <span class="nx">port</span> <span class="mi">53620</span><span class="nx">.</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">MapOutputTracker</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">BlockManagerMaster</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">DiskBlockManager</span><span class="p">:</span> <span class="nx">Created</span> <span class="kd">local</span> <span class="nx">directory</span> <span class="nx">at</span> <span class="nx">C</span><span class="p">:</span><span class="o">\</span><span class="nx">Users</span><span class="o">\</span><span class="nx">deel4986</span><span class="o">\</span><span class="nx">AppData</span><span class="o">\</span><span class="kd">Local</span><span class="o">\</span><span class="nx">Temp</span><span class="o">\</span><span class="nx">blockmgr</span><span class="o">-</span><span class="mi">8</span><span class="nx">c931369</span><span class="o">-</span><span class="mi">8987</span><span class="o">-</span><span class="mi">4</span><span class="nx">e52</span><span class="o">-</span><span class="mi">9562</span><span class="na">-f3e561aad111</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">MemoryStore</span><span class="p">:</span> <span class="nx">MemoryStore</span> <span class="nx">started</span> <span class="k">with</span> <span class="nx">capacity</span> <span class="mf">511.1</span> <span class="nx">MB</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">OutputCommitCoordinator</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">Utils</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">started</span> <span class="nx">service</span> <span class="s1">'SparkUI'</span> <span class="k">on</span> <span class="nx">port</span> <span class="mi">4040</span><span class="nx">.</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">SparkUI</span><span class="p">:</span> <span class="nx">Started</span> <span class="nx">SparkUI</span> <span class="nx">at</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:4040</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">Executor</span><span class="p">:</span> <span class="nx">Starting</span> <span class="nx">executor</span> <span class="nx">ID</span> <span class="nx">driver</span> <span class="k">on</span> <span class="nx">host</span> <span class="nx">localhost</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">Utils</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">started</span> <span class="nx">service</span> <span class="s1">'org.apache.spark.network.netty.NettyBlockTransferService'</span> <span class="k">on</span> <span class="nx">port</span> <span class="mi">53657</span><span class="nx">.</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">NettyBlockTransferService</span><span class="p">:</span> <span class="nx">Server</span> <span class="nx">created</span> <span class="k">on</span> <span class="mi">53657</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">BlockManagerMaster</span><span class="p">:</span> <span class="nx">Trying</span> <span class="k">to</span> <span class="nb">register</span> <span class="nx">BlockManager</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">11</span> <span class="nx">INFO</span> <span class="nx">BlockManagerMasterEndpoint</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">block</span> <span class="nx">manager</span> <span class="nx">localhost</span><span class="p">:</span><span class="mi">53657</span> <span class="k">with</span> <span class="mf">511.1</span> <span class="nx">MB</span> <span class="nx">RAM</span><span class="p">,</span> <span class="nx">BlockManagerId</span><span class="p">(</span><span class="nx">driver</span><span class="p">,</span> <span class="nx">localhost</span><span class="p">,</span> <span class="mi">53657</span><span class="p">)</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">15</span><span class="p">:</span><span class="mi">44</span><span class="p">:</span><span class="mi">12</span> <span class="nx">INFO</span> <span class="nx">BlockManagerMaster</span><span class="p">:</span> <span class="nx">Registered</span> <span class="nx">BlockManager</span>
+<span class="nx">Welcome</span> <span class="k">to</span>
+      <span class="nx">____</span>              <span class="nx">__</span>
+     <span class="o">/</span> <span class="nx">__</span><span class="p">/</span><span class="nx">__</span>  <span class="nx">___</span> <span class="nx">_____</span><span class="o">/</span> <span class="p">/</span><span class="nx">__</span>
+    <span class="nx">_</span><span class="o">\</span> <span class="o">\/</span> <span class="nx">_</span> <span class="o">\/</span> <span class="nx">_</span> <span class="err">`</span><span class="o">/</span> <span class="nx">__</span><span class="o">/</span>  <span class="s1">'_/</span>
+<span class="s1">   /__ / .__/\_,_/_/ /_/\_\   version 1.6.2</span>
+<span class="s1">      /_/</span>
+
+<span class="s1">Using Python version 2.7.10 (default, May 23 2015 09:44:00)</span>
+<span class="s1">SparkContext available as sc, HiveContext available as sqlContext.</span>
+<span class="s1">&gt;&gt;&gt;</span>
+</pre></div>
+<p>The last message provides a hint on how to work with Spark in the PySpark shell using the <code>sc</code> or <code>sqlContext</code> names. For example, typing <code>sc.version</code> in the shell should print the version of Spark. You can exit from the PySpark shell in the same way you exit from any Python shell by typing <code>exit()</code>. </p>
+<blockquote>
+<p>The PySpark shell outputs a few messages on exit. So you need to hit enter to get back to the Command Prompt.</p>
+</blockquote>
+<h2 id="configuring-the-spark-installation">Configuring the Spark Installation</h2>
+<p>Starting the PySpark shell produces a lot of messages of type <span class="caps">INFO</span>, <span class="caps">ERROR</span> and <span class="caps">WARN</span>. In this section we will see how to remove these messages. </p>
+<p>By default, the Spark installation on Windows does not include the <code>winutils.exe</code> utility that is used by Spark. If you do not tell your Spark installation where to look for <code>winutils.exe</code>, you will see error messages when running the PySpark shell such as</p>
+<div class="highlight"><pre><span></span>ERROR Shell: Failed to locate the winutils binary in the hadoop binary path
+java.io.IOException: Could not locate executable null\bin\winutils.exe in the Hadoop binaries.
+</pre></div>
+<p>This error message does not prevent the PySpark shell from starting. However if you try to run a standalone Python script using the <code>bin\spark-submit</code> utility, you will get an error. For example, try running the <code>wordcount.py</code> script from the <code>examples</code> folder in the Command Prompt when you are in the SPARK_HOME directory.</p>
+<div class="highlight"><pre><span></span>    bin\spark-submit examples\src\main\python\wordcount.py README.md
+</pre></div>
+<p>which produces the following error that also points to missing <code>winutils.exe</code></p>
+<div class="highlight"><pre><span></span><span class="nt">Using</span> <span class="nt">Spark</span><span class="s1">'s default log4j profile: org/apache/spark/log4j-defaults.properties</span>
+<span class="s1">16/07/09 16:23:27 INFO SparkContext: Running Spark version 1.6.2</span>
+<span class="s1">16/07/09 16:23:27 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span>
+<span class="s1">16/07/09 16:23:27 ERROR Shell: Failed to locate the winutils binary in the hadoop binary path</span>
+<span class="s1">java.io.IOException: Could not locate executable null\bin\winutils.exe in the Hadoop binaries.</span>
+<span class="s1">        at org.apache.hadoop.util.Shell.getQualifiedBinPath(Shell.java:355)</span>
+<span class="s1">        at org.apache.hadoop.util.Shell.getWinUtilsPath(Shell.java:370)</span>
+<span class="s1">        at org.apache.hadoop.util.Shell.&lt;clinit&gt;(Shell.java:363)</span>
+<span class="s1">        at org.apache.hadoop.util.StringUtils.&lt;clinit&gt;(StringUtils.java:79)</span>
+<span class="s1">        at org.apache.hadoop.security.Groups.parseStaticMapping(Groups.java:104)</span>
+<span class="s1">        at org.apache.hadoop.security.Groups.&lt;init&gt;(Groups.java:86)</span>
+<span class="s1">        at org.apache.hadoop.security.Groups.&lt;init&gt;(Groups.java:66)</span>
+<span class="s1">        at org.apache.hadoop.security.Groups.getUserToGroupsMappingService(Groups.java:280)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.initialize(UserGroupInformation.java:271)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.ensureInitialized(UserGroupInformation.java:248)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.loginUserFromSubject(UserGroupInformation.java:763)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.getLoginUser(UserGroupInformation.java:748)</span>
+<span class="s1">        at org.apache.hadoop.security.UserGroupInformation.getCurrentUser(UserGroupInformation.java:621)</span>
+<span class="s1">        at org.apache.spark.util.Utils$$anonfun$getCurrentUserName$1.apply(Utils.scala:2198)</span>
+<span class="s1">        at org.apache.spark.util.Utils$$anonfun$getCurrentUserName$1.apply(Utils.scala:2198)</span>
+<span class="s1">        at scala.Option.getOrElse(Option.scala:120)</span>
+<span class="s1">        at org.apache.spark.util.Utils$.getCurrentUserName(Utils.scala:2198)</span>
+<span class="s1">        at org.apache.spark.SparkContext.&lt;init&gt;(SparkContext.scala:322)</span>
+<span class="s1">        at org.apache.spark.api.java.JavaSparkContext.&lt;init&gt;(JavaSparkContext.scala:59)</span>
+<span class="s1">        at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)</span>
+<span class="s1">        at sun.reflect.NativeConstructorAccessorImpl.newInstance(Unknown Source)</span>
+<span class="s1">        at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(Unknown Source)</span>
+<span class="s1">        at java.lang.reflect.Constructor.newInstance(Unknown Source)</span>
+<span class="s1">        at py4j.reflection.MethodInvoker.invoke(MethodInvoker.java:234)</span>
+<span class="s1">        at py4j.reflection.ReflectionEngine.invoke(ReflectionEngine.java:381)</span>
+<span class="s1">        at py4j.Gateway.invoke(Gateway.java:214)</span>
+<span class="s1">        at py4j.commands.ConstructorCommand.invokeConstructor(ConstructorCommand.java:79)</span>
+<span class="s1">        at py4j.commands.ConstructorCommand.execute(ConstructorCommand.java:68)</span>
+<span class="s1">        at py4j.GatewayConnection.run(GatewayConnection.java:209)</span>
+<span class="s1">        at java.lang.Thread.run(Unknown Source)</span>
+<span class="s1">16/07/09 16:23:27 INFO SecurityManager: Changing view acls to: deel4986</span>
+<span class="s1">16/07/09 16:23:27 INFO SecurityManager: Changing modify acls to: deel4986</span>
+<span class="s1">16/07/09 16:23:27 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(deel4986); users with modify permissions: Set(deel4986)</span>
+<span class="s1">16/07/09 16:23:28 INFO Utils: Successfully started service '</span><span class="nt">sparkDriver</span><span class="err">'</span> <span class="nt">on</span> <span class="nt">port</span> <span class="nt">59506</span><span class="o">.</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">16</span><span class="nd">:23:28</span> <span class="nt">INFO</span> <span class="nt">Slf4jLogger</span><span class="o">:</span> <span class="nt">Slf4jLogger</span> <span class="nt">started</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">16</span><span class="nd">:23:28</span> <span class="nt">INFO</span> <span class="nt">Remoting</span><span class="o">:</span> <span class="nt">Starting</span> <span class="nt">remoting</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">16</span><span class="nd">:23:28</span> <span class="nt">INFO</span> <span class="nt">Remoting</span><span class="o">:</span> <span class="nt">Remoting</span> <span class="nt">started</span><span class="o">;</span> <span class="nt">listening</span> <span class="nt">on</span> <span class="nt">addresses</span> <span class="o">:</span><span class="cp">[</span><span class="nx">akka.tcp</span><span class="p">:</span><span class="c1">//sparkDriverActorSystem@localhost:59519]</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">28</span> <span class="nx">INFO</span> <span class="nx">Utils</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">started</span> <span class="nx">service</span> <span class="s1">'sparkDriverActorSystem'</span> <span class="k">on</span> <span class="nx">port</span> <span class="mi">59519</span><span class="nx">.</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">28</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">MapOutputTracker</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">28</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">BlockManagerMaster</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">28</span> <span class="nx">INFO</span> <span class="nx">MemoryStore</span><span class="p">:</span> <span class="nx">MemoryStore</span> <span class="nx">started</span> <span class="k">with</span> <span class="nx">capacity</span> <span class="mf">511.1</span> <span class="nx">MB</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">28</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">OutputCommitCoordinator</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">28</span> <span class="nx">INFO</span> <span class="nx">Utils</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">started</span> <span class="nx">service</span> <span class="s1">'SparkUI'</span> <span class="k">on</span> <span class="nx">port</span> <span class="mi">4040</span><span class="nx">.</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">28</span> <span class="nx">INFO</span> <span class="nx">SparkUI</span><span class="p">:</span> <span class="nx">Started</span> <span class="nx">SparkUI</span> <span class="nx">at</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:4040</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">28</span> <span class="nx">ERROR</span> <span class="nx">SparkContext</span><span class="p">:</span> <span class="nx">Error</span> <span class="nx">initializing</span> <span class="nx">SparkContext.</span>
+<span class="nx">java.lang.NullPointerException</span>
+        <span class="nx">at</span> <span class="nx">java.lang.ProcessBuilder.start</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.util.Shell.runCommand</span><span class="p">(</span><span class="nx">Shell.java</span><span class="p">:</span><span class="mi">482</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.util.Shell.run</span><span class="p">(</span><span class="nx">Shell.java</span><span class="p">:</span><span class="mi">455</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.util.Shell</span><span class="nv">$ShellCommandExecutor.execute</span><span class="p">(</span><span class="nx">Shell.java</span><span class="p">:</span><span class="mi">715</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.fs.FileUtil.chmod</span><span class="p">(</span><span class="nx">FileUtil.java</span><span class="p">:</span><span class="mi">873</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.fs.FileUtil.chmod</span><span class="p">(</span><span class="nx">FileUtil.java</span><span class="p">:</span><span class="mi">853</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.util.Utils</span><span class="err">$</span><span class="bp">.</span><span class="nx nx-Member">fetchFile</span><span class="p">(</span><span class="nx">Utils.scala</span><span class="p">:</span><span class="mi">407</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext.addFile</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">1386</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext.addFile</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">1340</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext</span><span class="err">$</span><span class="nv">$anonfun</span><span class="err">$</span><span class="mi">15</span><span class="bp">.</span><span class="nx nx-Member">apply</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">491</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext</span><span class="err">$</span><span class="nv">$anonfun</span><span class="err">$</span><span class="mi">15</span><span class="bp">.</span><span class="nx nx-Member">apply</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">491</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">scala.collection.immutable.List.foreach</span><span class="p">(</span><span class="kt">List</span><span class="bp">.</span><span class="nx nx-Member">scala</span><span class="p">:</span><span class="mi">318</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext.</span><span class="o">&lt;</span><span class="nx">init</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">491</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.api.java.JavaSparkContext.</span><span class="o">&lt;</span><span class="nx">init</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">JavaSparkContext.scala</span><span class="p">:</span><span class="mi">59</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">sun.reflect.NativeConstructorAccessorImpl.newInstance0</span><span class="p">(</span><span class="nx">Native</span> <span class="nx">Method</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">sun.reflect.NativeConstructorAccessorImpl.newInstance</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">sun.reflect.DelegatingConstructorAccessorImpl.newInstance</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">java.lang.reflect.Constructor.newInstance</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.reflection.MethodInvoker.invoke</span><span class="p">(</span><span class="nx">MethodInvoker.java</span><span class="p">:</span><span class="mi">234</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.reflection.ReflectionEngine.invoke</span><span class="p">(</span><span class="nx">ReflectionEngine.java</span><span class="p">:</span><span class="mi">381</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.Gateway.invoke</span><span class="p">(</span><span class="nx">Gateway.java</span><span class="p">:</span><span class="mi">214</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.commands.ConstructorCommand.invokeConstructor</span><span class="p">(</span><span class="nx">ConstructorCommand.java</span><span class="p">:</span><span class="mi">79</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.commands.ConstructorCommand.execute</span><span class="p">(</span><span class="nx">ConstructorCommand.java</span><span class="p">:</span><span class="mi">68</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.GatewayConnection.run</span><span class="p">(</span><span class="nx">GatewayConnection.java</span><span class="p">:</span><span class="mi">209</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">java.lang.Thread.run</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">SparkUI</span><span class="p">:</span> <span class="nx">Stopped</span> <span class="nx">Spark</span> <span class="nx">web</span> <span class="nx">UI</span> <span class="nx">at</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:4040</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">MapOutputTrackerMasterEndpoint</span><span class="p">:</span> <span class="nx">MapOutputTrackerMasterEndpoint</span> <span class="nx">stopped</span><span class="o">!</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">MemoryStore</span><span class="p">:</span> <span class="nx">MemoryStore</span> <span class="nx">cleared</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">BlockManager</span><span class="p">:</span> <span class="nx">BlockManager</span> <span class="nx">stopped</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">BlockManagerMaster</span><span class="p">:</span> <span class="nx">BlockManagerMaster</span> <span class="nx">stopped</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">WARN</span> <span class="nx">MetricsSystem</span><span class="p">:</span> <span class="nx">Stopping</span> <span class="nx">a</span> <span class="nx">MetricsSystem</span> <span class="nx">that</span> <span class="nx">is</span> <span class="ow">not</span> <span class="nx">running</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">OutputCommitCoordinator</span><span class="nv">$OutputCommitCoordinatorEndpoint</span><span class="p">:</span> <span class="nx">OutputCommitCoordinator</span> <span class="nx">stopped</span><span class="o">!</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">SparkContext</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">stopped</span> <span class="nx">SparkContext</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">RemoteActorRefProvider</span><span class="nv">$RemotingTerminator</span><span class="p">:</span> <span class="nx">Shutting</span> <span class="nx">down</span> <span class="nx">remote</span> <span class="nx">daemon.</span>
+<span class="nx">Traceback</span> <span class="p">(</span><span class="nx">most</span> <span class="nx">recent</span> <span class="nx">call</span> <span class="nx">last</span><span class="p">):</span>
+  <span class="nb">File</span> <span class="s2">"c:/spark/spark-1.6.2-bin-hadoop2.6/examples/src/main/python/wordcount.py"</span><span class="p">,</span> <span class="nx">line</span> <span class="mi">30</span><span class="p">,</span> <span class="k">in</span> <span class="o">&lt;</span><span class="nx">module</span><span class="o">&gt;</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">RemoteActorRefProvider</span><span class="nv">$RemotingTerminator</span><span class="p">:</span> <span class="nx">Remote</span> <span class="nx">daemon</span> <span class="nx">shut</span> <span class="nx">down</span><span class="p">;</span> <span class="nx">proceeding</span> <span class="k">with</span> <span class="nx">flushing</span> <span class="nx">remote</span> <span class="nx">transports.</span>
+    <span class="n">sc</span><span class="o"> =</span> <span class="nx">SparkContext</span><span class="p">(</span><span class="n">appName</span><span class="o">=</span><span class="s2">"PythonWordCount"</span><span class="p">)</span>
+  <span class="nb">File</span> <span class="s2">"c:\spark\spark-1.6.2-bin-hadoop2.6\python\lib\pyspark.zip\pyspark\context.py"</span><span class="p">,</span> <span class="nx">line</span> <span class="mi">115</span><span class="p">,</span> <span class="k">in</span> <span class="nx">__init__</span>
+  <span class="nb">File</span> <span class="s2">"c:\spark\spark-1.6.2-bin-hadoop2.6\python\lib\pyspark.zip\pyspark\context.py"</span><span class="p">,</span> <span class="nx">line</span> <span class="mi">172</span><span class="p">,</span> <span class="k">in</span> <span class="nx">_do_init</span>
+  <span class="nb">File</span> <span class="s2">"c:\spark\spark-1.6.2-bin-hadoop2.6\python\lib\pyspark.zip\pyspark\context.py"</span><span class="p">,</span> <span class="nx">line</span> <span class="mi">235</span><span class="p">,</span> <span class="k">in</span> <span class="nx">_initialize_context</span>
+  <span class="nb">File</span> <span class="s2">"c:\spark\spark-1.6.2-bin-hadoop2.6\python\lib\py4j-0.9-src.zip\py4j\java_gateway.py"</span><span class="p">,</span> <span class="nx">line</span> <span class="mi">1064</span><span class="p">,</span> <span class="k">in</span> <span class="nx">__call__</span>
+  <span class="nb">File</span> <span class="s2">"c:\spark\spark-1.6.2-bin-hadoop2.6\python\lib\py4j-0.9-src.zip\py4j\protocol.py"</span><span class="p">,</span> <span class="nx">line</span> <span class="mi">308</span><span class="p">,</span> <span class="k">in</span> <span class="nx">get_return_value</span>
+<span class="nx">py4j.protocol.Py4JJavaError</span><span class="p">:</span> <span class="nx">An</span> <span class="nx">error</span> <span class="nx">occurred</span> <span class="k">while</span> <span class="nx">calling</span> <span class="kc">None</span><span class="bp">.</span><span class="nx nx-Member">org.apache.spark.api.java.JavaSparkContext.</span>
+<span class="p">:</span> <span class="nx">java.lang.NullPointerException</span>
+        <span class="nx">at</span> <span class="nx">java.lang.ProcessBuilder.start</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.util.Shell.runCommand</span><span class="p">(</span><span class="nx">Shell.java</span><span class="p">:</span><span class="mi">482</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.util.Shell.run</span><span class="p">(</span><span class="nx">Shell.java</span><span class="p">:</span><span class="mi">455</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.util.Shell</span><span class="nv">$ShellCommandExecutor.execute</span><span class="p">(</span><span class="nx">Shell.java</span><span class="p">:</span><span class="mi">715</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.fs.FileUtil.chmod</span><span class="p">(</span><span class="nx">FileUtil.java</span><span class="p">:</span><span class="mi">873</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.hadoop.fs.FileUtil.chmod</span><span class="p">(</span><span class="nx">FileUtil.java</span><span class="p">:</span><span class="mi">853</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.util.Utils</span><span class="err">$</span><span class="bp">.</span><span class="nx nx-Member">fetchFile</span><span class="p">(</span><span class="nx">Utils.scala</span><span class="p">:</span><span class="mi">407</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext.addFile</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">1386</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext.addFile</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">1340</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext</span><span class="err">$</span><span class="nv">$anonfun</span><span class="err">$</span><span class="mi">15</span><span class="bp">.</span><span class="nx nx-Member">apply</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">491</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext</span><span class="err">$</span><span class="nv">$anonfun</span><span class="err">$</span><span class="mi">15</span><span class="bp">.</span><span class="nx nx-Member">apply</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">491</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">scala.collection.immutable.List.foreach</span><span class="p">(</span><span class="kt">List</span><span class="bp">.</span><span class="nx nx-Member">scala</span><span class="p">:</span><span class="mi">318</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.SparkContext.</span><span class="o">&lt;</span><span class="nx">init</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">SparkContext.scala</span><span class="p">:</span><span class="mi">491</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">org.apache.spark.api.java.JavaSparkContext.</span><span class="o">&lt;</span><span class="nx">init</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">JavaSparkContext.scala</span><span class="p">:</span><span class="mi">59</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">sun.reflect.NativeConstructorAccessorImpl.newInstance0</span><span class="p">(</span><span class="nx">Native</span> <span class="nx">Method</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">sun.reflect.NativeConstructorAccessorImpl.newInstance</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">sun.reflect.DelegatingConstructorAccessorImpl.newInstance</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">java.lang.reflect.Constructor.newInstance</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.reflection.MethodInvoker.invoke</span><span class="p">(</span><span class="nx">MethodInvoker.java</span><span class="p">:</span><span class="mi">234</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.reflection.ReflectionEngine.invoke</span><span class="p">(</span><span class="nx">ReflectionEngine.java</span><span class="p">:</span><span class="mi">381</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.Gateway.invoke</span><span class="p">(</span><span class="nx">Gateway.java</span><span class="p">:</span><span class="mi">214</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.commands.ConstructorCommand.invokeConstructor</span><span class="p">(</span><span class="nx">ConstructorCommand.java</span><span class="p">:</span><span class="mi">79</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.commands.ConstructorCommand.execute</span><span class="p">(</span><span class="nx">ConstructorCommand.java</span><span class="p">:</span><span class="mi">68</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">py4j.GatewayConnection.run</span><span class="p">(</span><span class="nx">GatewayConnection.java</span><span class="p">:</span><span class="mi">209</span><span class="p">)</span>
+        <span class="nx">at</span> <span class="nx">java.lang.Thread.run</span><span class="p">(</span><span class="nx">Unknown</span> <span class="nx">Source</span><span class="p">)</span>
+
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">ShutdownHookManager</span><span class="p">:</span> <span class="nx">Shutdown</span> <span class="nx">hook</span> <span class="nx">called</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">23</span><span class="p">:</span><span class="mi">29</span> <span class="nx">INFO</span> <span class="nx">RemoteActorRefProvider</span><span class="nv">$RemotingTerminator</span><span class="p">:</span> <span class="nx">Remoting</span> <span class="nx">shut</span> <span class="nx">down.</span>
+</pre></div>
+<h3 id="installing-winutils">Installing winutils</h3>
+<p>Let’s download the <code>winutils.exe</code> and configure our Spark installation to find <code>winutils.exe</code>.</p>
+<ol>
+<li>
+<p>Create a <code>hadoop\bin</code> folder inside the SPARK_HOME folder.</p>
+</li>
+<li>
+<p>Download the <a href="http://github.com/steveloughran/winutils">winutils.exe</a> for the version of hadoop against which your Spark installation was built for. In my case the hadoop version was 2.6.0. So I <a href="http://github.com/steveloughran/winutils/raw/master/hadoop-2.6.0/bin/winutils.exe">downloaded</a> the winutils.exe for hadoop 2.6.0 and copied it to the <code>hadoop\bin</code> folder in the SPARK_HOME folder.</p>
+</li>
+<li>
+<p>Create a system environment variable in Windows called <code>SPARK_HOME</code> that points to the SPARK_HOME folder path. Search the internet in case you need a refresher on how to create environment variables in your version of Windows such as articles like <a href="http://www.computerhope.com/issues/ch000549.htm">these</a>.</p>
+</li>
+<li>
+<p>Create another system environment variable in Windows called <code>HADOOP_HOME</code> that points to the hadoop folder inside the SPARK_HOME folder. </p>
+</li>
+</ol>
+<blockquote>
+<p>Since the <code>hadoop</code> folder is inside the SPARK_HOME folder, it is better to create <code>HADOOP_HOME</code> environment variable using a value of <code>%SPARK_HOME%\hadoop</code>. That way you don’t have to change <code>HADOOP_HOME</code> if <code>SPARK_HOME</code> is updated.</p>
+</blockquote>
+<p>If you now run the <code>bin\pyspark</code> script from a Windows Command Prompt, the error messages related to <code>winutils.exe</code> should be gone. For example, I got the following messages after running the <code>bin\pyspark</code> utility after configuring <code>winutils</code></p>
+<div class="highlight"><pre><span></span><span class="nt">Python</span> <span class="nt">2</span><span class="nc">.7.10</span> <span class="o">(</span><span class="nt">default</span><span class="o">,</span> <span class="nt">May</span> <span class="nt">23</span> <span class="nt">2015</span><span class="o">,</span> <span class="nt">09</span><span class="nd">:44:00</span><span class="o">)</span> <span class="cp">[</span><span class="nx">MSC</span> <span class="nx">v.1500</span> <span class="mi">64</span> <span class="nx">bit</span> <span class="p">(</span><span class="nx">AMD64</span><span class="p">)</span><span class="cp">]</span> <span class="nt">on</span> <span class="nt">win32</span>
+<span class="nt">Type</span> <span class="s2">"help"</span><span class="o">,</span> <span class="s2">"copyright"</span><span class="o">,</span> <span class="s2">"credits"</span> <span class="nt">or</span> <span class="s2">"license"</span> <span class="nt">for</span> <span class="nt">more</span> <span class="nt">information</span><span class="o">.</span>
+<span class="nt">Using</span> <span class="nt">Spark</span><span class="s1">'s default log4j profile: org/apache/spark/log4j-defaults.properties</span>
+<span class="s1">16/07/09 16:37:51 INFO SparkContext: Running Spark version 1.6.2</span>
+<span class="s1">16/07/09 16:37:52 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span>
+<span class="s1">16/07/09 16:37:52 INFO SecurityManager: Changing view acls to: deel4986</span>
+<span class="s1">16/07/09 16:37:52 INFO SecurityManager: Changing modify acls to: deel4986</span>
+<span class="s1">16/07/09 16:37:52 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: Set(deel4986); users with modify permissions: Set(deel4986)</span>
+<span class="s1">16/07/09 16:37:52 INFO Utils: Successfully started service '</span><span class="nt">sparkDriver</span><span class="err">'</span> <span class="nt">on</span> <span class="nt">port</span> <span class="nt">62029</span><span class="o">.</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">16</span><span class="nd">:37:52</span> <span class="nt">INFO</span> <span class="nt">Slf4jLogger</span><span class="o">:</span> <span class="nt">Slf4jLogger</span> <span class="nt">started</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">16</span><span class="nd">:37:52</span> <span class="nt">INFO</span> <span class="nt">Remoting</span><span class="o">:</span> <span class="nt">Starting</span> <span class="nt">remoting</span>
+<span class="nt">16</span><span class="o">/</span><span class="nt">07</span><span class="o">/</span><span class="nt">09</span> <span class="nt">16</span><span class="nd">:37:52</span> <span class="nt">INFO</span> <span class="nt">Remoting</span><span class="o">:</span> <span class="nt">Remoting</span> <span class="nt">started</span><span class="o">;</span> <span class="nt">listening</span> <span class="nt">on</span> <span class="nt">addresses</span> <span class="o">:</span><span class="cp">[</span><span class="nx">akka.tcp</span><span class="p">:</span><span class="c1">//sparkDriverActorSystem@localhost:62042]</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">52</span> <span class="nx">INFO</span> <span class="nx">Utils</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">started</span> <span class="nx">service</span> <span class="s1">'sparkDriverActorSystem'</span> <span class="k">on</span> <span class="nx">port</span> <span class="mi">62042</span><span class="nx">.</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">52</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">MapOutputTracker</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">52</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">BlockManagerMaster</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">52</span> <span class="nx">INFO</span> <span class="nx">MemoryStore</span><span class="p">:</span> <span class="nx">MemoryStore</span> <span class="nx">started</span> <span class="k">with</span> <span class="nx">capacity</span> <span class="mf">511.1</span> <span class="nx">MB</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">SparkEnv</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">OutputCommitCoordinator</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">Utils</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">started</span> <span class="nx">service</span> <span class="s1">'SparkUI'</span> <span class="k">on</span> <span class="nx">port</span> <span class="mi">4040</span><span class="nx">.</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">SparkUI</span><span class="p">:</span> <span class="nx">Started</span> <span class="nx">SparkUI</span> <span class="nx">at</span> <span class="nx">http</span><span class="p">:</span><span class="c1">//localhost:4040</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">Executor</span><span class="p">:</span> <span class="nx">Starting</span> <span class="nx">executor</span> <span class="nx">ID</span> <span class="nx">driver</span> <span class="k">on</span> <span class="nx">host</span> <span class="nx">localhost</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">Utils</span><span class="p">:</span> <span class="nx">Successfully</span> <span class="nx">started</span> <span class="nx">service</span> <span class="s1">'org.apache.spark.network.netty.NettyBlockTransferService'</span> <span class="k">on</span> <span class="nx">port</span> <span class="mi">62079</span><span class="nx">.</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">NettyBlockTransferService</span><span class="p">:</span> <span class="nx">Server</span> <span class="nx">created</span> <span class="k">on</span> <span class="mi">62079</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">BlockManagerMaster</span><span class="p">:</span> <span class="nx">Trying</span> <span class="k">to</span> <span class="nb">register</span> <span class="nx">BlockManager</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">BlockManagerMasterEndpoint</span><span class="p">:</span> <span class="nx">Registering</span> <span class="nx">block</span> <span class="nx">manager</span> <span class="nx">localhost</span><span class="p">:</span><span class="mi">62079</span> <span class="k">with</span> <span class="mf">511.1</span> <span class="nx">MB</span> <span class="nx">RAM</span><span class="p">,</span> <span class="nx">BlockManagerId</span><span class="p">(</span><span class="nx">driver</span><span class="p">,</span> <span class="nx">localhost</span><span class="p">,</span> <span class="mi">62079</span><span class="p">)</span>
+<span class="mi">16</span><span class="p">/</span><span class="nx">07</span><span class="p">/</span><span class="nx">09</span> <span class="mi">16</span><span class="p">:</span><span class="mi">37</span><span class="p">:</span><span class="mi">53</span> <span class="nx">INFO</span> <span class="nx">BlockManagerMaster</span><span class="p">:</span> <span class="nx">Registered</span> <span class="nx">BlockManager</span>
+<span class="nx">Welcome</span> <span class="k">to</span>
+      <span class="nx">____</span>              <span class="nx">__</span>
+     <span class="o">/</span> <span class="nx">__</span><span class="p">/</span><span class="nx">__</span>  <span class="nx">___</span> <span class="nx">_____</span><span class="o">/</span> <span class="p">/</span><span class="nx">__</span>
+    <span class="nx">_</span><span class="o">\</span> <span class="o">\/</span> <span class="nx">_</span> <span class="o">\/</span> <span class="nx">_</span> <span class="err">`</span><span class="o">/</span> <span class="nx">__</span><span class="o">/</span>  <span class="s1">'_/</span>
+<span class="s1">   /__ / .__/\_,_/_/ /_/\_\   version 1.6.2</span>
+<span class="s1">      /_/</span>
+
+<span class="s1">Using Python version 2.7.10 (default, May 23 2015 09:44:00)</span>
+<span class="s1">SparkContext available as sc, HiveContext available as sqlContext.</span>
+<span class="s1">&gt;&gt;&gt;</span>
+</pre></div>
+<p>The <code>bin\spark-submit</code> utility can also be successfully used to run <code>wordcount.py</code> script.</p>
+<h3 id="configuring-the-log-level-for-spark">Configuring the log level for Spark</h3>
+<p>There are still a lot of extra <span class="caps">INFO</span> messages in the console everytime you start or exit from a PySpark shell or run the <code>spark-submit</code> utility. So let’s make one more change to our Spark installation so that only warning and error messages are written to the console. In order to do this</p>
+<ol>
+<li>
+<p>Copy the <code>log4j.properties.template</code> file in the <code>SPARK_HOME\conf</code> folder as <code>log4j.properties</code> file in the <code>SPARK_HOME\conf</code> folder.</p>
+</li>
+<li>
+<p>Set the <code>log4j.rootCategory</code> property value to <code>WARN, console</code></p>
+</li>
+<li>
+<p>Save the <code>log4j.properties</code> file.</p>
+</li>
+</ol>
+<p>Now any informative messages will not be logged to the console. For example, I got the following messages after running the <code>bin\pyspark</code> utility once I configured the log level to <span class="caps">WARN</span>.</p>
+<div class="highlight"><pre><span></span>Python 2.7.10 (default, May 23 2015, 09:44:00) [MSC v.1500 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+16/07/09 16:45:47 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /__ / .__/\_,_/_/ /_/\_\   version 1.6.2
+      /_/
+
+Using Python version 2.7.10 (default, May 23 2015 09:44:00)
+SparkContext available as sc, HiveContext available as sqlContext.
+&gt;&gt;&gt;
+</pre></div>
+<h2 id="summary">Summary</h2>
+<p>In order to work with PySpark, start a Windows Command Prompt and change into your SPARK_HOME directory.</p>
+<ul>
+<li>
+<p>To start a PySpark shell, run the <code>bin\pyspark</code> utility. Once your are in the PySpark shell use the <code>sc</code> and <code>sqlContext</code> names and type <code>exit()</code> to return back to the Command Prompt.</p>
+</li>
+<li>
+<p>To run a standalone Python script, run the <code>bin\spark-submit</code> utility and specify the path of your Python script as well as any arguments your Python script needs in the Command Prompt. For example, to run the <code>wordcount.py</code> script from <code>examples</code> directory in your SPARK_HOME folder, you can run the following command</p>
+<p><code>bin\spark-submit examples\src\main\python\wordcount.py README.md</code> </p>
+</li>
+</ul>
+<h2 id="references">References</h2>
+<p>I used the following references to gather information about this post.</p>
+<ul>
+<li>
+<p><a href="https://blogs.msdn.microsoft.com/arsen/2016/02/09/resolving-spark-1-6-0-java-lang-nullpointerexception-not-found-value-sqlcontext-error-when-running-spark-shell-on-windows-10-64-bit/">Setting up winutils.exe</a></p>
+</li>
+<li>
+<p>Downloading Spark and Getting Started (chapter 2) from O’Reilly’s <a href="https://www.amazon.com/dp/1449358624">Learning Spark</a> book.</p>
+</li>
+</ul>
+            <section>
+    <p id="post-share-links">
+    Share on:
+    <a href="http://twitter.com/home?status=Getting%20Started%20with%20PySpark%20on%C2%A0Windows%20http%3A//deelesh.github.io/pyspark-windows.html" target="_blank" title="Share on Twitter">Twitter</a>
+    ❄
+    <a href="http://www.facebook.com/sharer/sharer.php?u=http%3A//deelesh.github.io/pyspark-windows.html" target="_blank" title="Share on Facebook">Facebook</a>
+    ❄
+    <a href="https://plus.google.com/share?url=http%3A//deelesh.github.io/pyspark-windows.html" target="_blank" title="Share on Google Plus">Google+</a>
+    ❄
+    <a href="mailto:?subject=Getting%20Started%20with%20PySpark%20on%C2%A0Windows&amp;body=http%3A//deelesh.github.io/pyspark-windows.html" target="_blank" title="Share via Email">Email</a>
+    </p>
+</section>
+
+            <section>
+<p id="comment-message">Any suggestions or feedback? Leave your comments below. </p>
+<div class="accordion" id="accordion2">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle disqus-comment-count" data-toggle="collapse" data-parent="#accordion2"
+                    data-disqus-identifier="pyspark-windows-9abce9a1333940f2883a41bd0f121ca4"
+                href="./pyspark-windows.html#disqus_thread">
+                Comments
+            </a>
+        </div>
+        <div id="disqus_thread" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <div class="comments">
+                    <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_shortname = 'deelesh';
+        var disqus_identifier = 'pyspark-windows-9abce9a1333940f2883a41bd0f121ca4';
+    var disqus_url = './pyspark-windows.html';
+
+    (function() {
+         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+     })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+            <hr/>
+        </div>
+        <section>
+        <div class="span2" style="float:right;font-size:0.9em;">
+            <h4>Published</h4>
+            <time pubdate="pubdate" datetime="2016-07-09T00:00:00-07:00">Jul 9, 2016</time>
+
+<h4>Last Updated</h4>
+<time datetime="2016-07-09T22:45:00-07:00">Jul 9, 2016</time>
+
+            <h4>Category</h4>
+            <a class="category-link" href="./categories.html#big-data-ref">Big Data</a>
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="./tags.html#pyspark-ref">pyspark
+                    <span>1</span>
+</a></li>
+                <li><a href="./tags.html#python-ref">python
+                    <span>1</span>
+</a></li>
+                <li><a href="./tags.html#spark-ref">spark
+                    <span>1</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+    <a href="http://github.com/deelesh" title="My github Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-github sidebar-social-links"></i></a>
+    <a href="http://twitter.com/deelesh" title="My twitter Profile" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-twitter sidebar-social-links"></i></a>
+    <a href="mailto:deelesh@gmail.com" title="My Email Address" class="sidebar-social-links" target="_blank">
+    <i class="fa fa-envelope sidebar-social-links"></i></a>
+        </div>
+        </section>
+</div>
+</article>
+                </div>
+                <div class="span1"></div>
+            </div>
+        </div>
+        <div id="push"></div>
+    </div>
+<footer>
+<div id="footer">
+    <ul class="footer-content">
+        <li class="elegant-power">Powered by <a href="http://getpelican.com/" title="Pelican Home Page">Pelican</a>. Theme: <a href="http://oncrashreboot.com/pelican-elegant" title="Theme Elegant Home Page">Elegant</a> by <a href="http://oncrashreboot.com" title="Talha Mansoor Home Page">Talha Mansoor</a></li>
+    </ul>
+</div>
+</footer>            <script src="http://code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+            <script type="text/javascript">
+var disqus_shortname = 'deelesh';
+(function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+}());
+</script>
+<script  language="javascript" type="text/javascript">
+function uncollapse() {
+    if (window.location.hash.match(/^#comment-\d+$/)) {
+        $('#disqus_thread').collapse('show');
+    }
+}
+</script>
+<script type="text/javascript" language="JavaScript">
+uncollapse();
+window.onhashchange=function(){
+    if (window.location.hash.match(/^#comment-\d+$/))
+        window.location.reload(true);
+}
+</script>
+<script>
+$('#disqus_thread').on('shown', function () {
+    var link = document.getElementsByClassName('accordion-toggle');
+    var old_innerHTML = link[0].innerHTML;
+    $(link[0]).fadeOut(500, function() {
+        $(this).text('Click here to hide comments').fadeIn(500);
+    });
+    $('#disqus_thread').on('hidden', function () {
+        $(link[0]).fadeOut(500, function() {
+            $(this).text(old_innerHTML).fadeIn(500);
+        });
+    })
+})
+</script>
+
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+    License : http://oncrashreboot.com/pelican-elegant -->
+</html>
