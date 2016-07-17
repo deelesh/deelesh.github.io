@@ -1,5 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>My Weblog</title><link href="http://deelesh.github.io/" rel="alternate"></link><link href="http://deelesh.github.io/feeds/big-data.atom.xml" rel="self"></link><id>http://deelesh.github.io/</id><updated>2016-07-09T22:45:00-07:00</updated><entry><title>Getting Started with PySpark on Windows</title><link href="http://deelesh.github.io/pyspark-windows.html" rel="alternate"></link><published>2016-07-09T22:45:00-07:00</published><author><name>Deelesh Mandloi</name></author><id>tag:deelesh.github.io,2016-07-09:pyspark-windows.html</id><summary type="html">&lt;p&gt;I decided to teach myself how to work with big data and came across &lt;a href="http://spark.apache.org"&gt;Apache Spark&lt;/a&gt;. While I had heard of &lt;a href="http://hadoop.apache.org"&gt;Apache Hadoop&lt;/a&gt;, to use Hadoop for working with big data, I had to write code in Java which I was not really looking forward to as I love to write code in Python. Spark supports a Python programming &lt;span class="caps"&gt;API&lt;/span&gt; called &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html"&gt;PySpark&lt;/a&gt; that is actively maintained and was enough to convince me to start learning PySpark for working with big data.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>My Weblog</title><link href="http://deelesh.github.io/" rel="alternate"></link><link href="http://deelesh.github.io/feeds/big-data.atom.xml" rel="self"></link><id>http://deelesh.github.io/</id><updated>2016-07-16T00:00:00-07:00</updated><entry><title>Hello PySpark World</title><link href="http://deelesh.github.io/hello-pyspark-world.html" rel="alternate"></link><published>2016-07-16T00:00:00-07:00</published><author><name>Deelesh Mandloi</name></author><id>tag:deelesh.github.io,2016-07-16:hello-pyspark-world.html</id><summary type="html">&lt;p&gt;When learning &lt;a href="http://spark.apache,org"&gt;Apache Spark&lt;/a&gt;, the most common first example seems to be a program to count the number of words in a file. Let’s see how we can write such a program using the &lt;a href="http://spark.apache.org/docs/latest/api/python/index.html"&gt;Python &lt;span class="caps"&gt;API&lt;/span&gt;&lt;/a&gt; for Spark (PySpark). This post assumes that you have already installed Spark. If you need a refresher on how to install Spark on Windows, checkout this &lt;a href="pyspark-windows.html"&gt;post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id="word-count-program"&gt;Word Count Program&lt;/h2&gt;
+&lt;p&gt;In this post we will learn how to write a program that counts the number of words in a file. To achieve this, the program needs to read the entire file, split each line on space and count the frequency of each unique word. Since I did not want to include a special file whose words our program can count, I am counting the words in the same file that contains the source code of our program. The entire program is listed below&lt;/p&gt;
+&lt;div class="gist"&gt;
+    &lt;script src='https://gist.github.com/57778e3f3f4d4ff4a8e49985ca4dce06.js'&gt;&lt;/script&gt;
+    &lt;noscript&gt;
+        &lt;pre&gt;&lt;code&gt;'''Print the words and their frequencies in this file'''
+
+import operator
+import pyspark
+
+def main():
+    '''Program entry point'''
+
+    #Intialize a spark context
+    with pyspark.SparkContext("local", "PySparkWordCount") as sc:
+        #Get a RDD containing lines from this script file  
+        lines = sc.textFile(__file__)
+        #Split each line into words and assign a frequency of 1 to each word
+        words = lines.flatMap(lambda line: line.split(" ")).map(lambda word: (word, 1))
+        #count the frequency for words
+        counts = words.reduceByKey(operator.add)
+        #Sort the counts in descending order based on the word frequency
+        sorted_counts =  counts.sortBy(lambda x: x[1], False)
+        #Get an iterator over the counts to print a word and its frequency
+        for word,count in sorted_counts.toLocalIterator():
+            print(u"{} --&gt; {}".format(word, count))
+
+if __name__ == "__main__":
+    main()&lt;/code&gt;&lt;/pre&gt;
+    &lt;/noscript&gt;
+&lt;/div&gt;
+&lt;h2 id="running-word-count-program"&gt;Running Word Count Program&lt;/h2&gt;
+&lt;p&gt;To run the Word Count program,&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Open a terminal window such as a Windows Command Prompt.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Change into your SPARK_HOME directory.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Run the &lt;code&gt;spark-submit&lt;/code&gt; utility and pass the full path to your Word Count program file as an argument.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For example, on my Windows laptop I used the following commands to run the Word Count program.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;    cd %SPARK_HOME%
+    bin\spark-submit c:\code\pyspark-hello-world.py
+&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id="building-blocks-of-a-pyspark-program"&gt;Building Blocks of a PySpark Program&lt;/h2&gt;
+&lt;p&gt;In order to understand how the Word Count program works, we need to first understand the basic building blocks of any PySpark program. A PySpark program can be written using the following workflow &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Import the &lt;a href="http://spark.apache.org/docs/latest/api/python/index.html"&gt;pyspark&lt;/a&gt; Python module.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Create the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext"&gt;SparkContext&lt;/a&gt; by specifying the &lt;span class="caps"&gt;URL&lt;/span&gt; of the cluster on which to run your application and your application name.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Use one or more methods of the &lt;code&gt;SparkContext&lt;/code&gt; to create a &lt;a href="http://spark.apache.org/docs/latest/programming-guide.html#resilient-distributed-datasets-rdds"&gt;resilient distributed dataset&lt;/a&gt; (&lt;span class="caps"&gt;RDD&lt;/span&gt;) from your big data.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apply one or more transformations on your RDDs to process your big data.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Apply one or more actions on your RDDs to produce the outputs.    &lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="how-the-word-count-program-works"&gt;How the Word Count Program Works&lt;/h2&gt;
+&lt;p&gt;Let’s see how we apply the PySpark workflow in our Word Count program. We first import the &lt;code&gt;pyspark&lt;/code&gt; module along with the &lt;a href="http://docs.python.org/2/library/operator.html"&gt;operator&lt;/a&gt; module from the Python standard library as we need to later use the &lt;code&gt;add&lt;/code&gt; function from the &lt;code&gt;operator&lt;/code&gt; module.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;operator&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyspark&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Once the &lt;code&gt;pyspark&lt;/code&gt; module is imported, we create a &lt;code&gt;SparkContext&lt;/code&gt; instance passing in the special keyword string, &lt;code&gt;local&lt;/code&gt;, and the name of our application, &lt;code&gt;PySparkWordCount&lt;/code&gt;. The &lt;code&gt;local&lt;/code&gt; keyword tells Spark to run this program locally in the same process that is used to run our program. Realistically you will specify the &lt;span class="caps"&gt;URL&lt;/span&gt; of the Spark cluster on which your application should run and not use the &lt;code&gt;local&lt;/code&gt; keyword. The &lt;code&gt;SparkContext&lt;/code&gt; is created using the &lt;a href="http://docs.python.org/2/reference/compound_stmts.html#with"&gt;with statement&lt;/a&gt; as the &lt;code&gt;SparkContext&lt;/code&gt; needs to be closed when our program terminates.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;pyspark&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;SparkContext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;"local"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"PySparkWordCount"&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="c1"&gt;#Get a RDD containing lines from this script file&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Using the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.SparkContext.textFile"&gt;textFile&lt;/a&gt; method on the &lt;code&gt;SparkContext&lt;/code&gt; instance, we get a &lt;span class="caps"&gt;RDD&lt;/span&gt; containing all the lines from the program file. The path to the program file is obtained using &lt;code&gt;__file__&lt;/code&gt; name.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;lines&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;textFile&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;__file__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We then apply two transformations to the &lt;code&gt;lines&lt;/code&gt; &lt;span class="caps"&gt;RDD&lt;/span&gt;. First we split each line using a space to get a &lt;span class="caps"&gt;RDD&lt;/span&gt; of all words in every line using the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD.flatMap"&gt;flatMap&lt;/a&gt; transformation. Then we create a new &lt;span class="caps"&gt;RDD&lt;/span&gt; containing a list of  two value tuples where each tuple associates the number 1 with each word like &lt;code&gt;[(import 1), (operator, 1)]&lt;/code&gt; using the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD.map"&gt;map&lt;/a&gt; transformation. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;words&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;" "&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;word&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;word&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note the use of &lt;a href="http://docs.python.org/2/tutorial/controlflow.html#lambda-expressions"&gt;lambda expression&lt;/a&gt; in the &lt;code&gt;flatMap&lt;/code&gt; and &lt;code&gt;map&lt;/code&gt; transformations. Lambda expressions are used in Python to create anonymous functions at runtime without binding the functions to names. The above line could also be written as&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;split_line&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;split&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;" "&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;assign_one&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;word&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;word&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;words&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;lines&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;flatMap&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;split_line&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;assign_one&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you are not used to lambda expressions, defining functions and then passing in function names to Spark transformations might make your code easier to read. But the Spark documentation seems to use lambda expressions in all of the Python examples. So it is better to get used to lambda expressions.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Lambda expressions can have only one statement which returns the value. In case you need to have multiple statements in your functions, you need to use the pattern of defining explicit functions and passing in their names.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We then apply the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD.reduceByKey"&gt;reduceByKey&lt;/a&gt; transformation to the &lt;code&gt;words&lt;/code&gt; &lt;span class="caps"&gt;RDD&lt;/span&gt; passing in the &lt;code&gt;add&lt;/code&gt; function from the &lt;code&gt;operator&lt;/code&gt; standard library module. This creates a new &lt;span class="caps"&gt;RDD&lt;/span&gt; that is like a dictionary with keys as unique words in the file and values as the frequency of the words.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;counts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;words&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;reduceByKey&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;operator&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We then sort the &lt;code&gt;counts&lt;/code&gt; &lt;span class="caps"&gt;RDD&lt;/span&gt; in the descending order based on the frequency of unique words such that words with highest frequency are listed first by applying the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD.sortBy"&gt;sortyBy&lt;/a&gt; transformation.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;sorted_counts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt;  &lt;span class="n"&gt;counts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sortBy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;lambda&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Finally we get an iterator over the &lt;code&gt;sorted_counts&lt;/code&gt; &lt;span class="caps"&gt;RDD&lt;/span&gt; by applying the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD.toLocalIterator"&gt;toLocalIterator&lt;/a&gt; action to print each unique word in the file and its frequency. &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;word&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;sorted_counts&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toLocalIterator&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;u"{} --&amp;gt; {}"&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;word&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;We are using the &lt;code&gt;toLocalIterator&lt;/code&gt; action instead of the &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html#pyspark.RDD.collect"&gt;collect&lt;/a&gt; action as &lt;code&gt;collect&lt;/code&gt; will return the entire list in memory which might cause an out of memory error if the input file is really big. By using the &lt;code&gt;toLocalIterator&lt;/code&gt; action, our program will only hold a single word in memory at any time.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;You can write PySpark programs by creating a &lt;code&gt;SparkContext&lt;/code&gt;, loading your big data as an &lt;span class="caps"&gt;RDD&lt;/span&gt;, applying one or more transformations to the RDDs to perform your processing and applying one or more actions to the processed RDDs to get the results.&lt;/p&gt;</summary><category term="pyspark"></category><category term="spark"></category><category term="python"></category></entry><entry><title>Getting Started with PySpark on Windows</title><link href="http://deelesh.github.io/pyspark-windows.html" rel="alternate"></link><published>2016-07-09T22:45:00-07:00</published><author><name>Deelesh Mandloi</name></author><id>tag:deelesh.github.io,2016-07-09:pyspark-windows.html</id><summary type="html">&lt;p&gt;I decided to teach myself how to work with big data and came across &lt;a href="http://spark.apache.org"&gt;Apache Spark&lt;/a&gt;. While I had heard of &lt;a href="http://hadoop.apache.org"&gt;Apache Hadoop&lt;/a&gt;, to use Hadoop for working with big data, I had to write code in Java which I was not really looking forward to as I love to write code in Python. Spark supports a Python programming &lt;span class="caps"&gt;API&lt;/span&gt; called &lt;a href="http://spark.apache.org/docs/latest/api/python/pyspark.html"&gt;PySpark&lt;/a&gt; that is actively maintained and was enough to convince me to start learning PySpark for working with big data.&lt;/p&gt;
 &lt;p&gt;In this post, I describe how I got started with PySpark on Windows. My laptop is running Windows 10. So the screenshots are specific to Windows 10. I am also assuming that you are comfortable working with the Command Prompt on Windows. You do not have to be an expert, but you need to know how to start a Command Prompt and run commands such as those that help you move around your computer’s file system. In case you need a refresher, a quick &lt;a href="http://www.cs.princeton.edu/courses/archive/spr05/cos126/cmd-prompt.html"&gt;introduction&lt;/a&gt; might be handy.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Often times, many open source projects do not have good Windows support. So I had to first figure out if Spark and PySpark would work well on Windows. The official Spark &lt;a href="http://spark.apache.org/docs/latest/#downloading"&gt;documentation&lt;/a&gt; does mention about supporting Windows.   &lt;/p&gt;
